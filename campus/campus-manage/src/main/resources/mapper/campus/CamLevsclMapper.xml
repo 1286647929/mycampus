@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.campus.manage.mapper.CamLevsclMapper">
+    
+    <resultMap type="CamLevscl" id="CamLevsclResult">
+        <result property="studentId"    column="student_id"    />
+        <result property="studentName"    column="student_name"    />
+        <result property="collegeName"    column="college_name"    />
+        <result property="studentClass"    column="student_class"    />
+        <result property="levCourse"    column="lev_course"    />
+        <result property="travel"    column="travel"    />
+        <result property="levTime"    column="lev_time"    />
+        <result property="reschoolTime"    column="reschool_time"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectCamLevsclVo">
+        select student_id, student_name, college_name, student_class, lev_course, travel, lev_time, reschool_time, status from cam_levscl
+    </sql>
+
+    <select id="selectCamLevsclList" parameterType="CamLevscl" resultMap="CamLevsclResult">
+        <include refid="selectCamLevsclVo"/>
+        <where>  
+            <if test="studentName != null  and studentName != ''"> and student_name like concat('%', #{studentName}, '%')</if>
+            <if test="collegeName != null  and collegeName != ''"> and college_name like concat('%', #{collegeName}, '%')</if>
+            <if test="studentClass != null  and studentClass != ''"> and student_class = #{studentClass}</if>
+            <if test="levCourse != null  and levCourse != ''"> and lev_course = #{levCourse}</if>
+            <if test="travel != null  and travel != ''"> and travel = #{travel}</if>
+            <if test="levTime != null "> and lev_time = #{levTime}</if>
+            <if test="reschoolTime != null "> and reschool_time = #{reschoolTime}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectCamLevsclByStudentId" parameterType="Long" resultMap="CamLevsclResult">
+        <include refid="selectCamLevsclVo"/>
+        where student_id = #{studentId}
+    </select>
+        
+    <insert id="insertCamLevscl" parameterType="CamLevscl">
+        insert into cam_levscl
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">student_id,</if>
+            <if test="studentName != null">student_name,</if>
+            <if test="collegeName != null">college_name,</if>
+            <if test="studentClass != null">student_class,</if>
+            <if test="levCourse != null">lev_course,</if>
+            <if test="travel != null and travel != ''">travel,</if>
+            <if test="levTime != null">lev_time,</if>
+            <if test="reschoolTime != null">reschool_time,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">#{studentId},</if>
+            <if test="studentName != null">#{studentName},</if>
+            <if test="collegeName != null">#{collegeName},</if>
+            <if test="studentClass != null">#{studentClass},</if>
+            <if test="levCourse != null">#{levCourse},</if>
+            <if test="travel != null and travel != ''">#{travel},</if>
+            <if test="levTime != null">#{levTime},</if>
+            <if test="reschoolTime != null">#{reschoolTime},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCamLevscl" parameterType="CamLevscl">
+        update cam_levscl
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="studentName != null">student_name = #{studentName},</if>
+            <if test="collegeName != null">college_name = #{collegeName},</if>
+            <if test="studentClass != null">student_class = #{studentClass},</if>
+            <if test="levCourse != null">lev_course = #{levCourse},</if>
+            <if test="travel != null and travel != ''">travel = #{travel},</if>
+            <if test="levTime != null">lev_time = #{levTime},</if>
+            <if test="reschoolTime != null">reschool_time = #{reschoolTime},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where student_id = #{studentId}
+    </update>
+
+    <delete id="deleteCamLevsclByStudentId" parameterType="Long">
+        delete from cam_levscl where student_id = #{studentId}
+    </delete>
+
+    <delete id="deleteCamLevsclByStudentIds" parameterType="String">
+        delete from cam_levscl where student_id in 
+        <foreach item="studentId" collection="array" open="(" separator="," close=")">
+            #{studentId}
+        </foreach>
+    </delete>
+</mapper>

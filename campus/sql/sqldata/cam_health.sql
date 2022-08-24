@@ -1,0 +1,2 @@
+INSERT INTO `cam_health` (`student_id`, `student_name`, `college_name`, `student_class`, `punch_time`, `tiime_part`, `travel`, `temperature`, `cough`, `fever`) VALUES (1, '1', '1', '1', '2022-08-20 19:54:02', '2', '1', '1', '1', '1');
+INSERT INTO `cam_health` (`student_id`, `student_name`, `college_name`, `student_class`, `punch_time`, `tiime_part`, `travel`, `temperature`, `cough`, `fever`) VALUES (2, '2', '2', '2', '2022-08-20 20:08:53', '10-11', '2', '2', '2', '2');
