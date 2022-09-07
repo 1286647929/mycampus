@@ -41,12 +41,12 @@ public class CamLevscl extends BaseEntity
     private String travel;
 
     /** 离校时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "离校时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date levTime;
 
     /** 返校时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "返校时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date reschoolTime;
 
@@ -108,12 +108,12 @@ public class CamLevscl extends BaseEntity
     {
         return travel;
     }
-    public void setLevTime(Date levTime) 
+    public void setLevTime(Date levTime)
     {
         this.levTime = levTime;
     }
 
-    public Date getLevTime() 
+    public Date getLevTime()
     {
         return levTime;
     }

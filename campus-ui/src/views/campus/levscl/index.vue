@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form :model="queryParams" ref="queryRef" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="姓名" prop="studentName">
         <el-input
           v-model="queryParams.studentName"
@@ -45,7 +45,7 @@
         <el-date-picker clearable
           v-model="queryParams.levTime"
           type="date"
-          value-format="yyyy-MM-dd"
+          value-format="YYYY-MM-DD"
           placeholder="请选择离校时间">
         </el-date-picker>
       </el-form-item>
@@ -53,7 +53,7 @@
         <el-date-picker clearable
           v-model="queryParams.reschoolTime"
           type="date"
-          value-format="yyyy-MM-dd"
+          value-format="YYYY-MM-DD"
           placeholder="请选择返校时间">
         </el-date-picker>
       </el-form-item>
@@ -106,7 +106,7 @@
           v-hasPermi="['campus:levscl:export']"
         >导出</el-button>
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="levsclList" @selection-change="handleSelectionChange">
@@ -118,18 +118,18 @@
       <el-table-column label="离校原因" align="center" prop="levCourse" />
       <el-table-column label="行程轨迹" align="center" prop="travel" />
       <el-table-column label="离校时间" align="center" prop="levTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.levTime, '{y}-{m}-{d}') }}</span>
+        <template #default="scope">
+          <span>{{ parseTime(scope.row.levTime) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="返校时间" align="center" prop="reschoolTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.reschoolTime, '{y}-{m}-{d}') }}</span>
+        <template #default="scope">
+          <span>{{ parseTime(scope.row.reschoolTime) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="审批状态" align="center" prop="status" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
+        <template #default="scope">
           <el-button
             size="mini"
             type="text"
@@ -147,18 +147,18 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
+        v-show="total > 0"
+        :total="total"
+        v-model:page="queryParams.pageNum"
+        v-model:limit="queryParams.pageSize"
+        @pagination="getList"
     />
 
     <!-- 添加或修改离校管理对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+    <el-dialog :title="title" v-model="open" width="500px" append-to-body>
+      <el-form ref="levsclRef" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="姓名" prop="studentName">
           <el-input v-model="form.studentName" placeholder="请输入姓名" />
         </el-form-item>
@@ -177,16 +177,16 @@
         <el-form-item label="离校时间" prop="levTime">
           <el-date-picker clearable
             v-model="form.levTime"
-            type="date"
-            value-format="yyyy-MM-dd"
+            type="datetime"
+            value-format="YYYY-MM-DD HH:mm:ss"
             placeholder="请选择离校时间">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="返校时间" prop="reschoolTime">
           <el-date-picker clearable
             v-model="form.reschoolTime"
-            type="date"
-            value-format="yyyy-MM-dd"
+            type="datetime"
+            value-format="YYYY-MM-DD HH:mm:ss"
             placeholder="请选择返校时间">
           </el-date-picker>
         </el-form-item>
@@ -199,155 +199,150 @@
   </div>
 </template>
 
-<script>
+<script setup name="Levscl">
 import { listLevscl, getLevscl, delLevscl, addLevscl, updateLevscl } from "@/api/campus/levscl";
 
-export default {
-  name: "Levscl",
-  data() {
-    return {
-      // 遮罩层
-      loading: true,
-      // 选中数组
-      ids: [],
-      // 非单个禁用
-      single: true,
-      // 非多个禁用
-      multiple: true,
-      // 显示搜索条件
-      showSearch: true,
-      // 总条数
-      total: 0,
-      // 离校管理表格数据
-      levsclList: [],
-      // 弹出层标题
-      title: "",
-      // 是否显示弹出层
-      open: false,
-      // 查询参数
-      queryParams: {
-        pageNum: 1,
-        pageSize: 10,
-        studentName: null,
-        collegeName: null,
-        studentClass: null,
-        levCourse: null,
-        travel: null,
-        levTime: null,
-        reschoolTime: null,
-        status: null
-      },
-      // 表单参数
-      form: {},
-      // 表单校验
-      rules: {
-        travel: [
-          { required: true, message: "行程轨迹不能为空", trigger: "blur" }
-        ],
+import useUserStore from '@/store/modules/user'
+
+const {proxy} = getCurrentInstance()
+
+const levsclList = ref([]);
+const open = ref(false);
+const loading = ref(true);
+const showSearch = ref(true);
+const ids = ref([]);
+const single = ref(true);
+const multiple = ref(true);
+const total = ref(0);
+const title = ref("");
+
+const data = reactive({
+  form: {},
+  queryParams: {
+    pageNum: 1,
+    pageSize: 10,
+    studentName: null,
+    collegeName: null,
+    studentClass: null,
+    levCourse: null,
+    travel: null,
+    levTime: null,
+    reschoolTime: null,
+    status: null
+  },
+  rules: {
+    studentName: [{ required: true, message: "学生姓名不能为空", trigger: "blur" }],
+    collegeName: [{ required: true, message: "学院名称不能为空", trigger: "blur" }],
+    studentClass: [{ required: true, message: "班级不能为空", trigger: "blur" }],
+  },
+});
+
+const { queryParams, form, rules } = toRefs(data);
+
+/** 查询离校管理列表 */
+function getList() {
+  loading.value = true;
+  listLevscl(queryParams.value).then(response => {
+    levsclList.value = response.rows;
+    total.value = response.total;
+    loading.value = false;
+  });
+}
+/** 取消按钮 */
+function cancel() {
+  open.value = false;
+  reset();
+}
+/** 表单重置 */
+function reset() {
+  form.value = {
+    studentId: null,
+    studentName: null,
+    collegeName: null,
+    studentClass: null,
+    levCourse: null,
+    travel: null,
+    levTime: null,
+    reschoolTime: null,
+    status: "0"
+  };
+  proxy.resetForm("levsclRef");
+}
+/** 搜索按钮操作 */
+function handleQuery() {
+  queryParams.value.pageNum = 1;
+  getList();
+}
+/** 重置按钮操作 */
+function resetQuery() {
+  proxy.resetForm("queryRef");
+  handleQuery();
+}
+/** 多选框选中数据 */
+function handleSelectionChange(selection) {
+  ids.value = selection.map(item => item.studentId);
+  single.value = selection.length != 1;
+  multiple.value = !selection.length;
+}
+/** 新增按钮操作 */
+function handleAdd() {
+  reset();
+  //获取用户信息
+  useUserStore().getInfo().then(userinfo => {
+    // console.log(userinfo)
+    form.value.studentName = userinfo.user.nickName;
+    form.value.collegeName = userinfo.user.dept.deptName;
+    form.value.studentClass = userinfo.user.className;
+  })
+  open.value = true;
+  title.value = "添加离校管理";
+}
+/** 修改按钮操作 */
+function handleUpdate(row) {
+  reset();
+  const studentId = row.studentId || ids.value;
+  getLevscl(studentId).then(response => {
+    form.value = response.data;
+    open.value = true;
+    title.value = "修改离校管理";
+  });
+}
+/** 提交按钮 */
+function submitForm() {
+  proxy.$refs["levsclRef"].validate(valid => {
+    if (valid) {
+      if (form.value.studentId != undefined) {
+        updateLevscl(form.value).then(response => {
+          proxy.$modal.msgSuccess("修改成功");
+          open.value = false;
+          getList();
+        });
+      } else {
+        addLevscl(form.value).then(response => {
+          proxy.$modal.msgSuccess("新增成功");
+          open.value = false;
+          getList();
+        });
       }
-    };
-  },
-  created() {
-    this.getList();
-  },
-  methods: {
-    /** 查询离校管理列表 */
-    getList() {
-      this.loading = true;
-      listLevscl(this.queryParams).then(response => {
-        this.levsclList = response.rows;
-        this.total = response.total;
-        this.loading = false;
-      });
-    },
-    // 取消按钮
-    cancel() {
-      this.open = false;
-      this.reset();
-    },
-    // 表单重置
-    reset() {
-      this.form = {
-        studentId: null,
-        studentName: null,
-        collegeName: null,
-        studentClass: null,
-        levCourse: null,
-        travel: null,
-        levTime: null,
-        reschoolTime: null,
-        status: "0"
-      };
-      this.resetForm("form");
-    },
-    /** 搜索按钮操作 */
-    handleQuery() {
-      this.queryParams.pageNum = 1;
-      this.getList();
-    },
-    /** 重置按钮操作 */
-    resetQuery() {
-      this.resetForm("queryForm");
-      this.handleQuery();
-    },
-    // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.studentId)
-      this.single = selection.length!==1
-      this.multiple = !selection.length
-    },
-    /** 新增按钮操作 */
-    handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加离校管理";
-    },
-    /** 修改按钮操作 */
-    handleUpdate(row) {
-      this.reset();
-      const studentId = row.studentId || this.ids
-      getLevscl(studentId).then(response => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改离校管理";
-      });
-    },
-    /** 提交按钮 */
-    submitForm() {
-      this.$refs["form"].validate(valid => {
-        if (valid) {
-          if (this.form.studentId != null) {
-            updateLevscl(this.form).then(response => {
-              this.$modal.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
-          } else {
-            addLevscl(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
-          }
-        }
-      });
-    },
-    /** 删除按钮操作 */
-    handleDelete(row) {
-      const studentIds = row.studentId || this.ids;
-      this.$modal.confirm('是否确认删除离校管理编号为"' + studentIds + '"的数据项？').then(function() {
-        return delLevscl(studentIds);
-      }).then(() => {
-        this.getList();
-        this.$modal.msgSuccess("删除成功");
-      }).catch(() => {});
-    },
-    /** 导出按钮操作 */
-    handleExport() {
-      this.download('campus/levscl/export', {
-        ...this.queryParams
-      }, `levscl_${new Date().getTime()}.xlsx`)
     }
-  }
-};
+  });
+}
+/** 删除按钮操作 */
+function handleDelete(row) {
+  const studentId = row.studentId || ids.value;
+  proxy.$modal.confirm('是否确认删除打卡编号为"' + studentId + '"的数据项？').then(function() {
+    return delLevscl(studentId);
+  }).then(() => {
+    getList();
+    proxy.$modal.msgSuccess("删除成功");
+  }).catch(() => {});
+}
+/** 导出按钮操作 */
+function handleExport() {
+  proxy.download("campus/levscl/export", {
+    ...queryParams.value
+  }, `levscl${new Date().getTime()}.xlsx`);
+}
+
+getList();
 </script>

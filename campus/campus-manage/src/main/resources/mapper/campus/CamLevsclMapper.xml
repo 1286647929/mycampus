@@ -28,8 +28,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="studentClass != null  and studentClass != ''"> and student_class = #{studentClass}</if>
             <if test="levCourse != null  and levCourse != ''"> and lev_course = #{levCourse}</if>
             <if test="travel != null  and travel != ''"> and travel = #{travel}</if>
-            <if test="levTime != null "> and lev_time = #{levTime}</if>
-            <if test="reschoolTime != null "> and reschool_time = #{reschoolTime}</if>
+            <if test="levTime != null "> and lev_time like concat('%', #{levTime} , '%') </if>
+            <if test="reschoolTime != null "> and reschool_time like concat('%' , #{reschoolTime} , '%')</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
         </where>
     </select>

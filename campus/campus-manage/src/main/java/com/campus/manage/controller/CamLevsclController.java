@@ -1,7 +1,11 @@
 package com.campus.manage.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,8 +43,7 @@ public class CamLevsclController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('campus:levscl:list')")
     @GetMapping("/list")
-    public TableDataInfo list(CamLevscl camLevscl)
-    {
+    public TableDataInfo list(CamLevscl camLevscl) throws ParseException {
         startPage();
         List<CamLevscl> list = camLevsclService.selectCamLevsclList(camLevscl);
         return getDataTable(list);

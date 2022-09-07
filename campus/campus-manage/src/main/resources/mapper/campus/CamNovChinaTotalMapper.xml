@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.campus.manage.mapper.CamNovChinaTotalMapper">
+    <!--使用insert，update，delete，select标签写sql-->
+
+    <resultMap id="CamNovChinaTotalResult" type="camNovChinaTotal">
+        <result property="id" column="id"/>
+        <result property="confirm" column="confirm"/>
+        <result property="suspect" column="suspect"/>
+        <result property="heal" column="heal"/>
+        <result property="dead" column="dead"/>
+        <result property="severe" column="severe"/>
+        <result property="input" column="input"/>
+        <result property="updateTime" column="update_Time"/>
+    </resultMap>
+
+    <sql id="selectCamNovChinaTotalVo">
+        select * from cam_nov_china_total
+    </sql>
+
+    <select id="selectCurrentChinaTotal" resultMap="CamNovChinaTotalResult">
+        select * from cam_nov_china_total WHERE id = (SELECT max(id) from cam_nov_china_total)
+    </select>
+
+
+    <insert id="insertChinaTotal" parameterType="camNovChinaTotal">
+        insert into cam_nov_china_total
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="confirm != null">confirm,</if>
+            <if test="suspect != null">suspect,</if>
+            <if test="heal != null">heal,</if>
+            <if test="dead != null">dead,</if>
+            <if test="severe != null ">severe,</if>
+            <if test="input != null ">input,</if>
+            <if test="updateTime != null ">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="confirm != null">#{confirm},</if>
+            <if test="suspect != null">#{suspect},</if>
+            <if test="heal != null">#{heal},</if>
+            <if test="dead != null">#{dead},</if>
+            <if test="severe != null ">#{severe},</if>
+            <if test="input != null">#{input},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+</mapper>

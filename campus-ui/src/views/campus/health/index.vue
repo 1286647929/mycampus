@@ -122,7 +122,7 @@
           v-hasPermi="['campus:health:export']"
         >导出</el-button>
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="healthList" @selection-change="handleSelectionChange">
@@ -300,10 +300,13 @@ function handleSelectionChange(selection) {
 /** 新增按钮操作 */
 function handleAdd() {
   reset();
+  //获取用户信息
   useUserStore().getInfo().then(userinfo => {
-    console.log(userinfo)
+    // console.log(userinfo)
+    form.value.studentName = userinfo.user.nickName;
+    form.value.collegeName = userinfo.user.dept.deptName;
+    form.value.studentClass = userinfo.user.className;
   })
-  form.value.studentName = useUserStore().name;
   open.value = true;
   title.value = "添加打卡";
 }
