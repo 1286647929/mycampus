@@ -88,6 +88,7 @@ public class ChinaTotalScheduleTask {
             Object provincedead = JSONObject.parseObject(String.valueOf(total)).get("dead");
             //现在确诊数
             Long nowconfirm = Long.parseLong(String.valueOf(provinceconfirm)) - Long.parseLong(String.valueOf(provinceheal)) - Long.parseLong(String.valueOf(provincedead));
+            //最后更新时间
             Object updateTime = JSONObject.parseObject(String.valueOf(childrenArray.get(i))).get("lastUpdateTime");
             //实体类
             CamNovData camNovData = new CamNovData();

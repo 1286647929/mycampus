@@ -1,20 +1,75 @@
 <template>
-  <div>
-    <div class="canvars" ref="myRef"></div>
+  <div class="cover_conter">
+    <el-tabs type="border-card" class="cover_tabs">
+      <el-tab-pane  label="全国疫情数据(含港澳台)"   class="cover_tabs-pane">
+        <div  class="cover_data_china">
+          <div>
+            <span>境外输入</span>
+            <span style="color: #FFA352">1231</span>
+            <span style="color: #FFA352"><text style="color: grey">较昨日</text>+1321</span>
+          </div>
+          <div>
+            <span>无症状感染者</span>
+            <span style="color:  #791618;">1231</span>
+            <span style="color:  #791618;"><text style="color: grey">较昨日</text>+1321</span>
+          </div>
+          <div>
+            <span>现有确诊</span>
+            <span style="color: #E44A3D">1231</span>
+            <span style="color: #E44A3D"><text style="color: grey">较昨日</text>+1321</span>
+          </div>
+          <div>
+            <span>累计确诊</span>
+            <span style="color:#A31D13;">1231</span>
+            <span style="color:#A31D13;"><text style="color: grey">较昨日</text>+1321</span>
+          </div>
+          <div>
+            <span>累计死亡</span>
+            <span style="color: #333333">1231</span>
+            <span style="color: #333333"><text style="color: grey">较昨日</text>+1321</span>
+          </div>
+          <div>
+            <span>累计治愈</span>
+            <span style="color:#34AA70;">1231</span>
+            <span style="color:#34AA70;"><text style="color: grey">较昨日</text>+1321</span>
+          </div>
+        </div>
+        <div class="bottom">
+          <span>截止1321231321</span>
+          <span>？数据说明</span>
+
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="当地数据" class="cover_tabs-pane">
+        当地数据
+      </el-tab-pane>
+    </el-tabs>
   </div>
+
+  <div class="canvars" ref="myRef"></div>
 </template>
 
 
 <script setup name="Nov">
 import  echarts from 'echarts'
 import 'echarts/map/js/china'
-import {ref,onMounted} from "vue";
-import {listNov} from "@/api/campus/nov";
+import {ref, onMounted, reactive} from "vue";
+
+import {novdatalist, novchinatotallist} from "@/api/campus/nov";
+
 const myRef = ref(null) // 获取dom实例
 onMounted(() => {
-  renderChart();
-})
+  novdatalist().then(res =>{
+    var datas = res.data;
+    for (let i = 0; i < datas.length; i++) {
+      data[i].name = datas[i].name;
+      data[i].value = datas[i].value;
+    }
+    renderChart(data);
+  })
+  // console.log(data)
 
+})
 const data = [
   {
     name: "北京",
@@ -154,7 +209,7 @@ const data = [
   },
 ];
 
-const renderChart = () => {
+const renderChart = (list)=>{
   const myChart = echarts.init(myRef.value)
   var option = {
     title: {
@@ -172,16 +227,13 @@ const renderChart = () => {
     visualMap: {
       type: "piecewise",
       pieces: [
-        {
-          min: 1000,
-          max: 1000000,
-          label: "大于等于1000人",
-          color: "#372a28",
-        },
-        { min: 500, max: 999, label: "确诊500-999人", color: "#4e160f" },
-        { min: 100, max: 499, label: "确诊100-499人", color: "#974236" },
-        { min: 10, max: 99, label: "确诊10-99人", color: "#ee7263" },
-        { min: 1, max: 9, label: "确诊1-9人", color: "#f5bba7" },
+        { min: 10000, max: 100000000, label: "≥ 10000 人", color: "#7f1100",},
+        { min: 1000, max: 9999, label: "1000 - 9999 人", color: "#bd1316" },
+        { min: 500, max: 999, label: "500 - 999 人", color: "#e64b45" },
+        { min: 100, max: 499, label: "100 - 499 人", color: "#ff8c71" },
+        { min: 10, max: 99, label: "10 - 99 人", color: "#fdd2a0" },
+        { min: 1, max: 9, label: "1 - 9 人", color: "#fff2cf" },
+        { min: 0, max: 0, label: "0", color: "rgb(255,255,255)" },
       ],
       color: ["#E0022B", "#E09107", "#A3E00B"],
     },
@@ -192,8 +244,8 @@ const renderChart = () => {
       top: "center",
       feature: {
         mark: { show: true },
-        dataView: { show: true, readOnly: false },
-        restore: { show: true },
+        dataView: { show: false, readOnly: false },
+        restore: { show: false },
         saveAsImage: { show: true },
       },
     },
@@ -237,7 +289,7 @@ const renderChart = () => {
         name: "确诊数",
         type: "map", //图表类型
         geoIndex: 0,
-        data: data, //图表的数据
+        data: list, //图表的数据
       },
       //   {
       //     name: "确诊数",
@@ -289,4 +341,44 @@ const renderChart = () => {
   width: 100%;
   height: 800px;
 }
+
+ .cover_tabs{
+   position: absolute;
+   z-index: 99999;
+  background-color: #f3f3f3;
+  width: 27%;
+  border-bottom-right-radius: 30px;
+
+}
+ .cover_data_china{
+   display: flex;
+   justify-content: center;
+   flex-wrap: wrap;
+ }
+.cover_data_china div{
+  width: 33%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30px;
+  letter-spacing: 1px;
+}
+.cover_data_china div span:nth-of-type(1){
+  font-size: 16px;
+}
+.cover_data_china div span:nth-of-type(2){
+  font-size: 20px;
+  margin: 10px 0;
+}
+.cover_data_china div span:nth-of-type(3){
+  font-size: 16px;
+}
+.bottom{
+  margin: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  align-items: center;
+}
+
 </style>
