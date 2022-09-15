@@ -14,3 +14,17 @@ export function novchinatotallist(){
         method:'get'
     })
 }
+
+export function novchinatotaltodaylist(){
+    return requet({
+        url:'/campus/novchinatotaltoday/list',
+        method:'get'
+    })
+}
+
+export function novlocaltotallist(){
+    return requet({
+        url: '/campus/novlocaltotal/list',
+        method:'get'
+    })
+}

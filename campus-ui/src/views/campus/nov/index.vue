@@ -1,65 +1,107 @@
 <template>
-  <div class="cover_conter">
-    <el-tabs type="border-card" class="cover_tabs">
-      <el-tab-pane  label="全国疫情数据(含港澳台)"   class="cover_tabs-pane">
-        <div  class="cover_data_china">
-          <div>
-            <span>境外输入</span>
-            <span style="color: #FFA352">1231</span>
-            <span style="color: #FFA352"><text style="color: grey">较昨日</text>+1321</span>
+  <div class="app-container">
+    <div class="cover_conter">
+        <el-icon class="location"><LocationInformation /></el-icon>
+      <el-tabs :stretch="true" type="border-card" class="cover_tabs" v-loading="loading" element-loading-text="正在获取疫情数据..." :element-loading-spinner="svg" element-loading-svg-view-box="-10, -10, 50, 50" element-loading-background="rgba(122, 122, 122, 0.8)">
+        <el-tab-pane :data="novtotallist" :list="novtotaltodaylist" label="全国疫情数据(含港澳台)" class="cover_tabs-pane">
+          <div class="cover_data_china">
+            <div>
+              <span>境外输入</span>
+              <span style="color: #FFA352">{{ novtotallist.input }}</span>
+              <span style="color: #FFA352"><text style="color: grey">较昨日</text>+{{ novtotaltodaylist.input }}</span>
+            </div>
+            <div>
+              <span>无症状感染者</span>
+              <span style="color:  #791618;">{{ novtotallist.noSymptom }}</span>
+              <span style="color:  #791618;"><text style="color: grey">较昨日</text>+{{ novtotaltodaylist.incrNoSymptom }}</span>
+            </div>
+            <div>
+              <span>现有确诊</span>
+              <span style="color: #E44A3D">{{ novtotallist.confirm - novtotallist.dead - novtotallist.heal }}</span>
+              <span style="color: #E44A3D"><text style="color: grey">较昨日</text>+{{
+                  novtotaltodaylist.storeconfirm
+                }}</span>
+            </div>
+            <div>
+              <span>累计确诊</span>
+              <span style="color:#A31D13;">{{ novtotallist.confirm }}</span>
+              <span style="color:#A31D13;"><text style="color: grey">较昨日</text>+{{ novtotaltodaylist.confirm }}</span>
+            </div>
+            <div>
+              <span>累计死亡</span>
+              <span style="color: #333333">{{ novtotallist.dead }}</span>
+              <span style="color: #333333"><text style="color: grey">较昨日</text>+{{ novtotaltodaylist.dead }}</span>
+            </div>
+            <div>
+              <span>累计治愈</span>
+              <span style="color:#34AA70;">{{ novtotallist.heal }}</span>
+              <span style="color:#34AA70;"><text style="color: grey">较昨日</text>+{{ novtotaltodaylist.heal }}</span>
+            </div>
           </div>
-          <div>
-            <span>无症状感染者</span>
-            <span style="color:  #791618;">1231</span>
-            <span style="color:  #791618;"><text style="color: grey">较昨日</text>+1321</span>
-          </div>
-          <div>
-            <span>现有确诊</span>
-            <span style="color: #E44A3D">1231</span>
-            <span style="color: #E44A3D"><text style="color: grey">较昨日</text>+1321</span>
-          </div>
-          <div>
-            <span>累计确诊</span>
-            <span style="color:#A31D13;">1231</span>
-            <span style="color:#A31D13;"><text style="color: grey">较昨日</text>+1321</span>
-          </div>
-          <div>
-            <span>累计死亡</span>
-            <span style="color: #333333">1231</span>
-            <span style="color: #333333"><text style="color: grey">较昨日</text>+1321</span>
-          </div>
-          <div>
-            <span>累计治愈</span>
-            <span style="color:#34AA70;">1231</span>
-            <span style="color:#34AA70;"><text style="color: grey">较昨日</text>+1321</span>
-          </div>
-        </div>
-        <div class="bottom">
-          <span>截止1321231321</span>
-          <span>？数据说明</span>
+          <div class="bottom">
+            <span>截止{{ novtotallist.updateTime }}</span>
+            <span> 数据说明</span>
 
-        </div>
-      </el-tab-pane>
-      <el-tab-pane label="当地数据" class="cover_tabs-pane">
-        当地数据
-      </el-tab-pane>
-    </el-tabs>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane :data="localtotallist" :list="localtodaytotallist" :label="localtotallist.name + '疫情数据'"
+                     class="cover_tabs-pane">
+          <div class="cover_data_china">
+            <div>
+              <span>累计确诊</span>
+              <span style="color:#A31D13;">{{ localtotallist.confirm }}</span>
+              <span style="color:#A31D13;"><text style="color: grey">较昨日</text>+{{ localtodaytotallist.confirm }}</span>
+            </div>
+            <div>
+              <span>累计死亡</span>
+              <span style="color: #333333">{{ localtotallist.dead }}</span>
+              <span style="color: #333333"><text style="color: grey">较昨日</text>+{{ localtodaytotallist.dead }}</span>
+            </div>
+            <div>
+              <span>累计治愈</span>
+              <span style="color:#34AA70;">{{ localtotallist.heal }}</span>
+              <span style="color:#34AA70;"><text style="color: grey">较昨日</text>+{{ localtodaytotallist.heal }}</span>
+            </div>
+          </div>
+          <div class="bottom">
+            <span>截止 {{ localtotallist.updateTime }}</span>
+            <span>？数据说明</span>
+
+          </div>
+        </el-tab-pane>
+      </el-tabs>
+    </div>
+
+    <div class="canvars" ref="myRef"></div>
   </div>
 
-  <div class="canvars" ref="myRef"></div>
 </template>
 
 
 <script setup name="Nov">
-import  echarts from 'echarts'
+import echarts from 'echarts'
 import 'echarts/map/js/china'
-import {ref, onMounted, reactive} from "vue";
+import {ref, onMounted} from "vue";
 
-import {novdatalist, novchinatotallist} from "@/api/campus/nov";
+import {novdatalist, novchinatotallist, novchinatotaltodaylist, novlocaltotallist} from "@/api/campus/nov";
+
+//区域加载
+const loading = ref(true)
+const svg = `
+        <path class="path" d="
+          M 30 15
+          L 28 17
+          M 25.61 25.61
+          A 15 15, 0, 0, 1, 15 30
+          A 15 15, 0, 1, 1, 27.99 7.5
+          L 15 15
+        " style="stroke-width: 4px; fill: rgba(0, 0, 0, 0)"/>
+      `
+
 
 const myRef = ref(null) // 获取dom实例
 onMounted(() => {
-  novdatalist().then(res =>{
+  novdatalist().then(res => {
     var datas = res.data;
     for (let i = 0; i < datas.length; i++) {
       data[i].name = datas[i].name;
@@ -67,8 +109,44 @@ onMounted(() => {
     }
     renderChart(data);
   })
-  // console.log(data)
+  novchinatotallist().then(res => {
+    novtotallist.value.confirm = res.data.confirm;
+    novtotallist.value.suspect = res.data.suspect;
+    novtotallist.value.heal = res.data.heal;
+    novtotallist.value.dead = res.data.dead;
+    novtotallist.value.severe = res.data.severe;
+    novtotallist.value.input = res.data.input;
+    novtotallist.value.noSymptom = res.data.noSymptom;
+    novtotallist.value.updateTime = res.data.updateTime;
+  })
+  novchinatotaltodaylist().then(res => {
+    novtotaltodaylist.value.confirm = res.data.confirm;
+    novtotaltodaylist.value.suspect = res.data.suspect;
+    novtotaltodaylist.value.heal = res.data.heal;
+    novtotaltodaylist.value.dead = res.data.dead;
+    novtotaltodaylist.value.severe = res.data.severe;
+    novtotaltodaylist.value.input = res.data.input;
+    novtotaltodaylist.value.incrNoSymptom = res.data.incrNoSymptom;
+    novtotaltodaylist.value.storeconfirm = res.data.storeconfirm;
+  })
+  novlocaltotallist().then(res => {
+    //当前本地总体数据
+    localtotallist.value.name = res.data[0].name;
+    localtotallist.value.confirm = res.data[0].confirm;
+    localtotallist.value.heal = res.data[0].heal;
+    localtotallist.value.dead = res.data[0].dead;
+    localtotallist.value.updateTime = res.data[0].updateTime;
 
+    //当前本地较昨日数据
+    localtodaytotallist.value.name = res.data[1].name;
+    localtodaytotallist.value.confirm = res.data[1].confirm;
+    localtodaytotallist.value.heal = res.data[1].heal;
+    localtodaytotallist.value.dead = res.data[1].dead;
+  })
+  setTimeout(function (){
+    loading.value = false;
+  },1000)
+  // loading.value = false;
 })
 const data = [
   {
@@ -209,7 +287,50 @@ const data = [
   },
 ];
 
-const renderChart = (list)=>{
+const novtotallist = ref({
+  confirm: '',
+  suspect: '',
+  heal: '',
+  dead: '',
+  severe: '',
+  input: '',
+  noSymptom: '',
+  updateTime: ''
+})
+
+const novtotaltodaylist = ref({
+  confirm: '',
+  suspect: '',
+  heal: '',
+  dead: '',
+  severe: '',
+  input: '',
+  incrNoSymptom: '',
+  storeconfirm: ''
+})
+
+const localtotallist = ref({
+  name: '',
+  confirm: '',
+  suspect: '',
+  heal: '',
+  dead: '',
+  severe: '',
+  input: '',
+  updateTime: ''
+});
+
+const localtodaytotallist = ref({
+  name: '',
+  confirm: '',
+  suspect: '',
+  heal: '',
+  dead: '',
+  severe: '',
+  input: ''
+});
+
+const renderChart = (list) => {
   const myChart = echarts.init(myRef.value)
   var option = {
     title: {
@@ -227,13 +348,13 @@ const renderChart = (list)=>{
     visualMap: {
       type: "piecewise",
       pieces: [
-        { min: 10000, max: 100000000, label: "≥ 10000 人", color: "#7f1100",},
-        { min: 1000, max: 9999, label: "1000 - 9999 人", color: "#bd1316" },
-        { min: 500, max: 999, label: "500 - 999 人", color: "#e64b45" },
-        { min: 100, max: 499, label: "100 - 499 人", color: "#ff8c71" },
-        { min: 10, max: 99, label: "10 - 99 人", color: "#fdd2a0" },
-        { min: 1, max: 9, label: "1 - 9 人", color: "#fff2cf" },
-        { min: 0, max: 0, label: "0", color: "rgb(255,255,255)" },
+        {min: 10000, max: 100000000, label: "≥ 10000 人", color: "#7f1100",},
+        {min: 1000, max: 9999, label: "1000 - 9999 人", color: "#bd1316"},
+        {min: 500, max: 999, label: "500 - 999 人", color: "#e64b45"},
+        {min: 100, max: 499, label: "100 - 499 人", color: "#ff8c71"},
+        {min: 10, max: 99, label: "10 - 99 人", color: "#fdd2a0"},
+        {min: 1, max: 9, label: "1 - 9 人", color: "#fff2cf"},
+        {min: 0, max: 0, label: "0", color: "rgb(255,255,255)"},
       ],
       color: ["#E0022B", "#E09107", "#A3E00B"],
     },
@@ -243,10 +364,10 @@ const renderChart = (list)=>{
       left: "right",
       top: "center",
       feature: {
-        mark: { show: true },
-        dataView: { show: false, readOnly: false },
-        restore: { show: false },
-        saveAsImage: { show: true },
+        mark: {show: true},
+        dataView: {show: false, readOnly: false},
+        restore: {show: false},
+        saveAsImage: {show: true},
       },
     },
     roamController: {
@@ -336,26 +457,32 @@ const renderChart = (list)=>{
 }
 </script>
 
-<style scoped>
+<style>
 .canvars {
   width: 100%;
   height: 800px;
 }
 
- .cover_tabs{
-   position: absolute;
-   z-index: 99999;
+.cover_conter{
+  display: flex;
+}
+
+.cover_tabs {
+  position: absolute;
+  z-index: 2;
   background-color: #f3f3f3;
   width: 27%;
   border-bottom-right-radius: 30px;
 
 }
- .cover_data_china{
-   display: flex;
-   justify-content: center;
-   flex-wrap: wrap;
- }
-.cover_data_china div{
+
+.cover_data_china {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.cover_data_china div {
   width: 33%;
   display: flex;
   flex-direction: column;
@@ -363,22 +490,33 @@ const renderChart = (list)=>{
   margin-bottom: 30px;
   letter-spacing: 1px;
 }
-.cover_data_china div span:nth-of-type(1){
+
+.cover_data_china div span:nth-of-type(1) {
   font-size: 16px;
 }
-.cover_data_china div span:nth-of-type(2){
+
+.cover_data_china div span:nth-of-type(2) {
   font-size: 20px;
   margin: 10px 0;
 }
-.cover_data_china div span:nth-of-type(3){
+
+.cover_data_china div span:nth-of-type(3) {
   font-size: 16px;
 }
-.bottom{
+
+.bottom {
   margin: 0 20px;
   display: flex;
   justify-content: space-between;
   flex-direction: row;
   align-items: center;
+}
+
+.location{
+  position: relative;
+  top: 10px;
+  left: 260px;
+  z-index: 3;
 }
 
 </style>

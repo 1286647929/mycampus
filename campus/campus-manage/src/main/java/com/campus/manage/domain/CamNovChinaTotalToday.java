@@ -4,15 +4,13 @@ import com.campus.common.core.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import java.util.Date;
-
 /**
- * 疫情地图数据
+ * 疫情地图数据——当天
  *
  * @author yyy
  * @date 2022/9/4 22:18
  */
-public class CamNovChinaTotal extends BaseEntity {
+public class CamNovChinaTotalToday extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     private Long Id;
@@ -29,7 +27,9 @@ public class CamNovChinaTotal extends BaseEntity {
 
     private Long input;
 
-    private Long noSymptom;
+    private Long incrNoSymptom;
+
+    private Long storeconfirm;
 
 
     public Long getId() {
@@ -88,12 +88,20 @@ public class CamNovChinaTotal extends BaseEntity {
         this.input = input;
     }
 
-    public Long getNoSymptom() {
-        return noSymptom;
+    public Long getStoreconfirm() {
+        return storeconfirm;
     }
 
-    public void setNoSymptom(Long noSymptom) {
-        this.noSymptom = noSymptom;
+    public void setStoreconfirm(Long storeconfirm) {
+        this.storeconfirm = storeconfirm;
+    }
+
+    public Long getIncrNoSymptom() {
+        return incrNoSymptom;
+    }
+
+    public void setIncrNoSymptom(Long incrNoSymptom) {
+        this.incrNoSymptom = incrNoSymptom;
     }
 
     @Override
@@ -106,8 +114,8 @@ public class CamNovChinaTotal extends BaseEntity {
                 .append("dead",getDead())
                 .append("severe",getSevere())
                 .append("input",getInput())
-                .append("noSymptom",getNoSymptom())
-                .append("updateTime",getUpdateTime())
+                .append("incrNoSymptom",getIncrNoSymptom())
+                .append("storeconfirm",getStoreconfirm())
                 .toString();
     }
 }

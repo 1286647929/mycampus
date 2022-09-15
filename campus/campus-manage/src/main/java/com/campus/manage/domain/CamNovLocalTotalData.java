@@ -1,43 +1,31 @@
 package com.campus.manage.domain;
 
-import com.campus.common.core.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import java.util.Date;
-
 /**
- * 疫情地图数据
- *
  * @author yyy
- * @date 2022/9/4 22:18
+ * @version 1.0
+ * @date 2022/9/12 16:20
  */
-public class CamNovChinaTotal extends BaseEntity {
-    private static final long serialVersionUID = 1L;
+public class CamNovLocalTotalData {
+    private static final Long serialVersionUID = 1L;
 
-    private Long Id;
-
+    private String name;
     private Long confirm;
-
     private Long suspect;
-
     private Long heal;
-
     private Long dead;
-
     private Long severe;
-
     private Long input;
+    private String updateTime;
 
-    private Long noSymptom;
-
-
-    public Long getId() {
-        return Id;
+    public String getName() {
+        return name;
     }
 
-    public void setId(Long id) {
-        Id = id;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Long getConfirm() {
@@ -88,25 +76,24 @@ public class CamNovChinaTotal extends BaseEntity {
         this.input = input;
     }
 
-    public Long getNoSymptom() {
-        return noSymptom;
+    public String getUpdateTime() {
+        return updateTime;
     }
 
-    public void setNoSymptom(Long noSymptom) {
-        this.noSymptom = noSymptom;
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
-                .append("id",getId())
+                .append("name",getName())
                 .append("confirm",getConfirm())
                 .append("suspect",getSuspect())
                 .append("heal",getHeal())
                 .append("dead",getDead())
                 .append("severe",getSevere())
                 .append("input",getInput())
-                .append("noSymptom",getNoSymptom())
                 .append("updateTime",getUpdateTime())
                 .toString();
     }

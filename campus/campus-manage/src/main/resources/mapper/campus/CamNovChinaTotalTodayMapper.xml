@@ -4,10 +4,10 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 
-<mapper namespace="com.campus.manage.mapper.CamNovChinaTotalMapper">
+<mapper namespace="com.campus.manage.mapper.CamNovChinaTotalTodayMapper">
     <!--使用insert，update，delete，select标签写sql-->
 
-    <resultMap id="CamNovChinaTotalResult" type="camNovChinaTotal">
+    <resultMap id="CamNovChinaTotalTodayResult" type="camNovChinaTotalToday">
         <result property="id" column="id"/>
         <result property="confirm" column="confirm"/>
         <result property="suspect" column="suspect"/>
@@ -15,21 +15,21 @@
         <result property="dead" column="dead"/>
         <result property="severe" column="severe"/>
         <result property="input" column="input"/>
-        <result property="noSymptom" column="no_symptom"/>
-        <result property="updateTime" column="update_time"/>
+        <result property="incrNoSymptom" column="incr_no_symptom"/>
+        <result property="storeconfirm" column="storeconfirm"/>
     </resultMap>
 
-    <sql id="selectCamNovChinaTotalVo">
-        select * from cam_nov_china_total
+    <sql id="selectCamNovChinaTotalTodayVo">
+        select * from cam_nov_china_total_today
     </sql>
 
-    <select id="selectCurrentChinaTotal" resultMap="CamNovChinaTotalResult">
-        select * from cam_nov_china_total WHERE id = (SELECT max(id) from cam_nov_china_total)
+    <select id="selectCurrentChinaTotalToday" resultMap="CamNovChinaTotalTodayResult">
+        select * from cam_nov_china_total_today WHERE id = (SELECT max(id) from cam_nov_china_total_today)
     </select>
 
 
-    <insert id="insertChinaTotal" parameterType="camNovChinaTotal">
-        insert into cam_nov_china_total
+    <insert id="insertChinaTotalToday" parameterType="camNovChinaTotalToday">
+        insert into cam_nov_china_total_today
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="confirm != null">confirm,</if>
@@ -38,8 +38,8 @@
             <if test="dead != null">dead,</if>
             <if test="severe != null ">severe,</if>
             <if test="input != null ">input,</if>
-            <if test="noSymptom != null">no_symptom,</if>
-            <if test="updateTime != null ">update_time,</if>
+            <if test="incrNoSymptom != null">incr_no_symptom,</if>
+            <if test="storeconfirm != null ">storeconfirm,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -49,8 +49,8 @@
             <if test="dead != null">#{dead},</if>
             <if test="severe != null ">#{severe},</if>
             <if test="input != null">#{input},</if>
-            <if test="noSymptom != null">#{noSymptom},</if>
-            <if test="updateTime != null">#{updateTime},</if>
+            <if test="incrNoSymptom != null">#{incrNoSymptom},</if>
+            <if test="storeconfirm != null">#{storeconfirm},</if>
         </trim>
     </insert>
 

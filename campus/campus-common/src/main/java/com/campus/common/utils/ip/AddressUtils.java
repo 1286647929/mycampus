@@ -9,6 +9,10 @@ import com.campus.common.constant.Constants;
 import com.campus.common.utils.StringUtils;
 import com.campus.common.utils.http.HttpUtils;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * 获取地址类
  * 
@@ -52,5 +56,33 @@ public class AddressUtils
             }
         }
         return UNKNOWN;
+    }
+
+    /**
+     * 内网查询
+     * @return
+     */
+    public static List<String> getAddress(){
+        try
+        {
+            String rspStr = HttpUtils.sendGet(IP_URL, "json=true", Constants.GBK);
+            if (StringUtils.isEmpty(rspStr))
+            {
+                log.error("获取地理位置异常 {}");
+                return Collections.singletonList(UNKNOWN);
+            }
+            JSONObject obj = JSON.parseObject(rspStr);
+            String region = obj.getString("pro");
+            String city = obj.getString("city");
+            List pro = new ArrayList<String>();
+            pro.add(region);
+            pro.add(city);
+            return pro;
+        }
+        catch (Exception e)
+        {
+            log.error("获取地理位置异常 {}");
+        }
+        return Collections.singletonList(UNKNOWN);
     }
 }
