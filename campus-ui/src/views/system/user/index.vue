@@ -1,12 +1,12 @@
 <template>
    <div class="app-container">
       <el-row :gutter="20">
-         <!--部门数据-->
+         <!--学院数据-->
          <el-col :span="4" :xs="24">
             <div class="head-container">
                <el-input
                   v-model="deptName"
-                  placeholder="请输入部门名称"
+                  placeholder="请输入学院名称"
                   clearable
                   prefix-icon="Search"
                   style="margin-bottom: 20px"
@@ -133,7 +133,7 @@
                <el-table-column label="用户编号" align="center" key="userId" prop="userId" v-if="columns[0].visible" />
                <el-table-column label="用户名称" align="center" key="userName" prop="userName" v-if="columns[1].visible" :show-overflow-tooltip="true" />
                <el-table-column label="用户昵称" align="center" key="nickName" prop="nickName" v-if="columns[2].visible" :show-overflow-tooltip="true" />
-               <el-table-column label="部门" align="center" key="deptName" prop="dept.deptName" v-if="columns[3].visible" :show-overflow-tooltip="true" />
+               <el-table-column label="学院" align="center" key="deptName" prop="dept.deptName" v-if="columns[3].visible" :show-overflow-tooltip="true" />
                <el-table-column label="手机号码" align="center" key="phonenumber" prop="phonenumber" v-if="columns[4].visible" width="120" />
                <el-table-column label="状态" align="center" key="status" v-if="columns[5].visible">
                   <template #default="scope">
@@ -207,13 +207,13 @@
                   </el-form-item>
                </el-col>
                <el-col :span="12">
-                  <el-form-item label="归属部门" prop="deptId">
+                  <el-form-item label="归属学院" prop="deptId">
                      <el-tree-select
                         v-model="form.deptId"
                         :data="deptOptions"
                         :props="{ value: 'id', label: 'label', children: 'children' }"
                         value-key="id"
-                        placeholder="请选择归属部门"
+                        placeholder="请选择归属学院"
                         check-strictly
                      />
                   </el-form-item>
@@ -270,7 +270,7 @@
             </el-row>
             <el-row>
                <el-col :span="12">
-                  <el-form-item label="岗位">
+                  <el-form-item label="职位">
                      <el-select v-model="form.postIds" multiple placeholder="请选择">
                         <el-option
                            v-for="item in postOptions"
@@ -392,7 +392,7 @@ const columns = ref([
   { key: 0, label: `用户编号`, visible: true },
   { key: 1, label: `用户名称`, visible: true },
   { key: 2, label: `用户昵称`, visible: true },
-  { key: 3, label: `部门`, visible: true },
+  { key: 3, label: `学院`, visible: true },
   { key: 4, label: `手机号码`, visible: true },
   { key: 5, label: `状态`, visible: true },
   { key: 6, label: `创建时间`, visible: true }
@@ -424,11 +424,11 @@ const filterNode = (value, data) => {
   if (!value) return true;
   return data.label.indexOf(value) !== -1;
 };
-/** 根据名称筛选部门树 */
+/** 根据名称筛选学院树 */
 watch(deptName, val => {
   proxy.$refs["deptTreeRef"].filter(val);
 });
-/** 查询部门下拉树结构 */
+/** 查询学院下拉树结构 */
 function getTreeselect() {
   treeselect().then(response => {
     deptOptions.value = response.data;
@@ -550,9 +550,9 @@ const handleFileSuccess = (response, file, fileList) => {
 function submitFileForm() {
   proxy.$refs["uploadRef"].submit();
 };
-/** 初始化部门数据 */
+/** 初始化学院数据 */
 function initTreeData() {
-  // 判断部门的数据是否存在，存在不获取，不存在则获取
+  // 判断学院的数据是否存在，存在不获取，不存在则获取
   if (deptOptions.value === undefined) {
     treeselect().then(response => {
       deptOptions.value = response.data;

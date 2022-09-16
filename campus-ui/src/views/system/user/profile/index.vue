@@ -26,9 +26,13 @@
                         <div class="pull-right">{{ state.user.email }}</div>
                      </li>
                      <li class="list-group-item">
-                        <svg-icon icon-class="tree" />所属部门
+                        <svg-icon icon-class="tree" />所属学院 / 职位
                         <div class="pull-right" v-if="state.user.dept">{{ state.user.dept.deptName }} / {{ state.postGroup }}</div>
                      </li>
+                    <li class="list-group-item">
+                      <svg-icon icon-class="tree" />所属班级
+                      <div class="pull-right" v-if="state.user.className">{{ state.user.className }}</div>
+                    </li>
                      <li class="list-group-item">
                         <svg-icon icon-class="peoples" />所属角色
                         <div class="pull-right">{{ state.roleGroup }}</div>
