@@ -1,7 +1,8 @@
 package com.campus.manage.mapper;
 
-import java.util.List;
 import com.campus.manage.domain.CamLevscl;
+
+import java.util.List;
 
 /**
  * 离校管理Mapper接口
@@ -26,6 +27,13 @@ public interface CamLevsclMapper
      * @return 离校管理集合
      */
     public List<CamLevscl> selectCamLevsclList(CamLevscl camLevscl);
+
+    /**
+     * 查询离校管理列表通过名称
+     * @param camLevscl
+     * @return
+     */
+    public List<CamLevscl> selectByStudentNameList(CamLevscl camLevscl);
 
     /**
      * 新增离校管理

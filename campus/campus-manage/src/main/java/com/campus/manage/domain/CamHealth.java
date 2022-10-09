@@ -1,11 +1,12 @@
 package com.campus.manage.domain;
 
-import java.util.Date;
+import com.campus.common.annotation.Excel;
+import com.campus.common.core.domain.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import com.campus.common.annotation.Excel;
-import com.campus.common.core.domain.BaseEntity;
+
+import java.util.Date;
 
 /**
  * 健康打卡对象 cam_health
@@ -39,7 +40,7 @@ public class CamHealth extends BaseEntity
 
     /** 时间段 */
     @Excel(name = "时间段")
-    private String tiimePart;
+    private String timePart;
 
     /** 行程轨迹 */
     @Excel(name = "行程轨迹")
@@ -102,14 +103,14 @@ public class CamHealth extends BaseEntity
     {
         return punchTime;
     }
-    public void setTiimePart(String tiimePart) 
+    public void setTimePart(String timePart)
     {
-        this.tiimePart = tiimePart;
+        this.timePart = timePart;
     }
 
-    public String getTiimePart() 
+    public String getTimePart()
     {
-        return tiimePart;
+        return timePart;
     }
     public void setTravel(String travel) 
     {
@@ -156,7 +157,7 @@ public class CamHealth extends BaseEntity
             .append("collegeName", getCollegeName())
             .append("studentClass", getStudentClass())
             .append("punchTime", getPunchTime())
-            .append("tiimePart", getTiimePart())
+            .append("timePart", getTimePart())
             .append("travel", getTravel())
             .append("temperature", getTemperature())
             .append("cough", getCough())

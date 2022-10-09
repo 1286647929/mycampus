@@ -10,7 +10,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="collegeName"    column="college_name"    />
         <result property="studentClass"    column="student_class"    />
         <result property="punchTime"    column="punch_time"    />
-        <result property="tiimePart"    column="tiime_part"    />
+        <result property="timePart"    column="time_part"    />
         <result property="travel"    column="travel"    />
         <result property="temperature"    column="temperature"    />
         <result property="cough"    column="cough"    />
@@ -18,7 +18,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectCamHealthVo">
-        select student_id, student_name, college_name, student_class, punch_time, tiime_part, travel, temperature, cough, fever from cam_health
+        select student_id, student_name, college_name, student_class, punch_time, time_part, travel, temperature, cough, fever from cam_health
     </sql>
 
     <select id="selectCamHealthList" parameterType="CamHealth" resultMap="CamHealthResult">
@@ -28,7 +28,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="collegeName != null  and collegeName != ''"> and college_name like concat('%', #{collegeName}, '%')</if>
             <if test="studentClass != null  and studentClass != ''"> and student_class = #{studentClass}</if>
             <if test="punchTime != null "> and punch_time = #{punchTime}</if>
-            <if test="tiimePart != null  and tiimePart != ''"> and tiime_part = #{tiimePart}</if>
+            <if test="timePart != null  and timePart != ''"> and time_part = #{timePart}</if>
             <if test="travel != null  and travel != ''"> and travel = #{travel}</if>
             <if test="temperature != null  and temperature != ''"> and temperature = #{temperature}</if>
             <if test="cough != null  and cough != ''"> and cough = #{cough}</if>
@@ -40,6 +40,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectCamHealthVo"/>
         where student_id = #{studentId}
     </select>
+
+    <select id="selectByStudentName" parameterType="CamHealth" resultMap="CamHealthResult">
+        <include refid="selectCamHealthVo"/>
+        <where>
+            <if test="studentName != null  and studentName != ''"> and student_name like concat('%', #{studentName}, '%')</if>
+            <if test="collegeName != null  and collegeName != ''"> and college_name like concat('%', #{collegeName}, '%')</if>
+            <if test="studentClass != null  and studentClass != ''"> and student_class = #{studentClass}</if>
+            <if test="punchTime != null "> and punch_time = #{punchTime}</if>
+            <if test="timePart != null  and timePart != ''"> and time_part = #{timePart}</if>
+            <if test="travel != null  and travel != ''"> and travel = #{travel}</if>
+            <if test="temperature != null  and temperature != ''"> and temperature = #{temperature}</if>
+            <if test="cough != null  and cough != ''"> and cough = #{cough}</if>
+            <if test="fever != null  and fever != ''"> and fever = #{fever}</if>
+        </where>
+        order by punch_time desc
+    </select>
         
     <insert id="insertCamHealth" parameterType="CamHealth" useGeneratedKeys="true" keyProperty="studentId">
         insert into cam_health
@@ -48,7 +64,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="collegeName != null">college_name,</if>
             <if test="studentClass != null">student_class,</if>
             <if test="punchTime != null">punch_time,</if>
-            <if test="tiimePart != null">tiime_part,</if>
+            <if test="timePart != null">time_part,</if>
             <if test="travel != null">travel,</if>
             <if test="temperature != null">temperature,</if>
             <if test="cough != null">cough,</if>
@@ -59,7 +75,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="collegeName != null">#{collegeName},</if>
             <if test="studentClass != null">#{studentClass},</if>
             <if test="punchTime != null">#{punchTime},</if>
-            <if test="tiimePart != null">#{tiimePart},</if>
+            <if test="timePart != null">#{timePart},</if>
             <if test="travel != null">#{travel},</if>
             <if test="temperature != null">#{temperature},</if>
             <if test="cough != null">#{cough},</if>
@@ -74,7 +90,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="collegeName != null">college_name = #{collegeName},</if>
             <if test="studentClass != null">student_class = #{studentClass},</if>
             <if test="punchTime != null">punch_time = #{punchTime},</if>
-            <if test="tiimePart != null">tiime_part = #{tiimePart},</if>
+            <if test="timePart != null">time_part = #{timePart},</if>
             <if test="travel != null">travel = #{travel},</if>
             <if test="temperature != null">temperature = #{temperature},</if>
             <if test="cough != null">cough = #{cough},</if>
@@ -93,4 +109,5 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{studentId}
         </foreach>
     </delete>
+
 </mapper>

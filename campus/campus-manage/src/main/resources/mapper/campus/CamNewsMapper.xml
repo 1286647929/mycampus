@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.campus.manage.mapper.CamNewsMapper">
+
+    <resultMap type="CamNews" id="CamNewsResult">
+        <result property="newId" column="new_id"/>
+        <result property="newTitle" column="new_title"/>
+        <result property="newAuthor" column="new_author"/>
+        <result property="newContent" column="new_content"/>
+        <result property="newSource" column="new_source"/>
+        <result property="newHits" column="new_hits"/>
+        <result property="image" column="image"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="selectCamNewsVo">
+        select new_id,
+               new_title,
+               new_author,
+               new_content,
+               new_source,
+               new_hits,
+               image,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               remark
+        from cam_news
+    </sql>
+
+    <select id="selectCamNewsList" parameterType="CamNews" resultMap="CamNewsResult">
+        <include refid="selectCamNewsVo"/>
+        <where>
+            <if test="newTitle != null  and newTitle != ''">and new_title like concat('%', #{newTitle}, '%')</if>
+            <if test="newAuthor != null  and newAuthor != ''">and new_author = #{newAuthor}</if>
+            <if test="newSource != null  and newSource != ''">and new_source = #{newSource}</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectCamNewsByNewId" parameterType="Long" resultMap="CamNewsResult">
+        <include refid="selectCamNewsVo"/>
+        where new_id = #{newId}
+    </select>
+
+    <insert id="insertCamNews" parameterType="CamNews" useGeneratedKeys="true" keyProperty="newId">
+        insert into cam_news
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="newTitle != null">new_title,</if>
+            <if test="newAuthor != null">new_author,</if>
+            <if test="newContent != null">new_content,</if>
+            <if test="newSource != null">new_source,</if>
+            <if test="newHits != null">new_hits,</if>
+            <if test="image != null">image,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="newTitle != null">#{newTitle},</if>
+            <if test="newAuthor != null">#{newAuthor},</if>
+            <if test="newContent != null">#{newContent},</if>
+            <if test="newSource != null">#{newSource},</if>
+            <if test="newHits != null">#{newHits},</if>
+            <if test="image != null">#{image},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+
+    <insert id="insertBatch">
+        insert into cam_news(new_id, new_title, new_author, new_content, new_source,
+        new_hits, image, create_by, create_time, update_by)
+        values
+        <foreach collection="newsList" item="item" separator=",">
+            (#{item.newId},#{item.newTitle},#{item.newAuthor},#{item.newContent},#{item.newSource},
+            #{item.newHits},#{item.image},#{item.createBy},#{item.createTime},#{item.updateBy}
+            )
+        </foreach>
+    </insert>
+
+    <update id="updateCamNews" parameterType="CamNews">
+        update cam_news
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="newTitle != null">new_title = #{newTitle},</if>
+            <if test="newAuthor != null">new_author = #{newAuthor},</if>
+            <if test="newContent != null">new_content = #{newContent},</if>
+            <if test="newSource != null">new_source = #{newSource},</if>
+            <if test="newHits != null">new_hits = #{newHits},</if>
+            <if test="image != null">image = #{image},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where new_id = #{newId}
+    </update>
+
+    <delete id="deleteCamNewsByNewId" parameterType="Long">
+        delete
+        from cam_news
+        where new_id = #{newId}
+    </delete>
+
+    <delete id="deleteCamNewsByNewIds" parameterType="String">
+        delete from cam_news where new_id in
+        <foreach item="newId" collection="array" open="(" separator="," close=")">
+            #{newId}
+        </foreach>
+    </delete>
+</mapper>

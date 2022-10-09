@@ -41,7 +41,7 @@ public class ChinaTotalScheduleTask {
     /**
      * 更新中国疫情总体数据、以及更新中国34省份疫情数据
      */
-    @Scheduled(cron = "0 10 */5 * * *")
+    @Scheduled(cron = "0 50 9 * * *")
     public void updateChinaTotalToDB() throws ParseException {
         String data = HttpUtils.sendGet("https://c.m.163.com/ug/api/wuhan/app/data/list-total");
         JSONObject jsonObject = JSONObject.parseObject(data);
@@ -146,6 +146,7 @@ public class ChinaTotalScheduleTask {
             camNovData.setValue(nowconfirm);
             camNovData.setUpdateTime(format.parse(String.valueOf(updateTime)));
             list.add(camNovData);
+
         }
         //将实体类插入数据库
         novDataService.insertCamNovData(list);

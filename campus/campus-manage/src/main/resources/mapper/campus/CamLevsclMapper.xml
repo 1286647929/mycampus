@@ -33,12 +33,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null  and status != ''"> and status = #{status}</if>
         </where>
     </select>
-    
+
+    <select id="selectByStudentNameList" parameterType="CamLevscl" resultMap="CamLevsclResult">
+        <include refid="selectCamLevsclVo"/>
+        <where>
+            <if test="studentName != null  and studentName != ''"> and student_name like concat('%', #{studentName}, '%')</if>
+            <if test="collegeName != null  and collegeName != ''"> and college_name like concat('%', #{collegeName}, '%')</if>
+            <if test="studentClass != null  and studentClass != ''"> and student_class = #{studentClass}</if>
+            <if test="levCourse != null  and levCourse != ''"> and lev_course = #{levCourse}</if>
+            <if test="travel != null  and travel != ''"> and travel = #{travel}</if>
+            <if test="levTime != null "> and lev_time like concat('%', #{levTime} , '%') </if>
+            <if test="reschoolTime != null "> and reschool_time like concat('%' , #{reschoolTime} , '%')</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+        order by lev_time desc
+    </select>
+
     <select id="selectCamLevsclByStudentId" parameterType="Long" resultMap="CamLevsclResult">
         <include refid="selectCamLevsclVo"/>
         where student_id = #{studentId}
     </select>
-        
+
     <insert id="insertCamLevscl" parameterType="CamLevscl">
         insert into cam_levscl
         <trim prefix="(" suffix=")" suffixOverrides=",">

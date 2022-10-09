@@ -1,7 +1,8 @@
 package com.campus.manage.service;
 
-import java.util.List;
 import com.campus.manage.domain.CamHealth;
+
+import java.util.List;
 
 /**
  * 健康打卡Service接口
@@ -26,6 +27,13 @@ public interface ICamHealthService
      * @return 健康打卡集合
      */
     public List<CamHealth> selectCamHealthList(CamHealth camHealth);
+
+    /**
+     * 查询健康打卡通过时间倒序
+     * @param camHealth 健康打卡
+     * @return
+     */
+    public List<CamHealth> selectByStudentName(CamHealth camHealth);
 
     /**
      * 新增健康打卡

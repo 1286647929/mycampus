@@ -1,11 +1,12 @@
 package com.campus.manage.service.impl;
 
-import java.util.List;
+import com.campus.manage.domain.CamHealth;
+import com.campus.manage.mapper.CamHealthMapper;
+import com.campus.manage.service.ICamHealthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.campus.manage.mapper.CamHealthMapper;
-import com.campus.manage.domain.CamHealth;
-import com.campus.manage.service.ICamHealthService;
+
+import java.util.List;
 
 /**
  * 健康打卡Service业务层处理
@@ -41,6 +42,16 @@ public class CamHealthServiceImpl implements ICamHealthService
     public List<CamHealth> selectCamHealthList(CamHealth camHealth)
     {
         return camHealthMapper.selectCamHealthList(camHealth);
+    }
+
+    /**
+     * 查询健康打卡通过时间倒序
+     * @param
+     * @return
+     */
+    @Override
+    public List<CamHealth> selectByStudentName(CamHealth camHealth) {
+        return camHealthMapper.selectByStudentName(camHealth);
     }
 
     /**

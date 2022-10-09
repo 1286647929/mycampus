@@ -33,9 +33,9 @@
 <!--          placeholder="请选择打卡时间">-->
 <!--        </el-date-picker>-->
 <!--      </el-form-item>-->
-      <el-form-item label="时间段" prop="tiimePart">
+      <el-form-item label="时间段" prop="timePart">
         <el-input
-          v-model="queryParams.tiimePart"
+          v-model="queryParams.timePart"
           placeholder="请输入时间段"
           clearable
           @keyup.enter="handleQuery"
@@ -136,7 +136,7 @@
           <span>{{ parseTime(scope.row.punchTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="时间段" align="center" prop="tiimePart" />
+      <el-table-column label="时间段" align="center" prop="timePart" />
       <el-table-column label="行程轨迹" align="center" prop="travel" />
       <el-table-column label="体温" align="center" prop="temperature" />
       <el-table-column label="咳嗽" align="center" prop="cough" />
@@ -187,8 +187,8 @@
 <!--            placeholder="请选择打卡时间">-->
 <!--          </el-date-picker>-->
 <!--        </el-form-item>-->
-        <el-form-item label="时间段" prop="tiimePart">
-          <el-input v-model="form.tiimePart" placeholder="请输入时间段" />
+        <el-form-item label="时间段" prop="timePart">
+          <el-input v-model="form.timePart" placeholder="请输入时间段" />
         </el-form-item>
         <el-form-item label="行程轨迹" prop="travel">
           <el-input v-model="form.travel" placeholder="请输入行程轨迹" />
@@ -236,7 +236,7 @@ const data = reactive({
     collegeName: null,
     studentClass: null,
     // punchTime: null,
-    tiimePart: null,
+    timePart: null,
     travel: null,
     temperature: null,
     cough: null,
@@ -273,7 +273,7 @@ function reset() {
     collegeName: null,
     studentClass: null,
     // punchTime: null,
-    tiimePart: null,
+    timePart: null,
     travel: null,
     temperature: null,
     cough: null,

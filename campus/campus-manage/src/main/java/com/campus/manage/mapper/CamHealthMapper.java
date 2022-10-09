@@ -1,7 +1,8 @@
 package com.campus.manage.mapper;
 
-import java.util.List;
 import com.campus.manage.domain.CamHealth;
+
+import java.util.List;
 
 /**
  * 健康打卡Mapper接口
@@ -18,6 +19,13 @@ public interface CamHealthMapper
      * @return 健康打卡
      */
     public CamHealth selectCamHealthByStudentId(Long studentId);
+
+    /**
+     * 查询健康打卡通过打卡时间倒序
+     * @param
+     * @return
+     */
+    List<CamHealth> selectByStudentName(CamHealth camHealth);
 
     /**
      * 查询健康打卡列表

@@ -1,25 +1,19 @@
 package com.campus.manage.controller;
 
-import java.util.List;
-import javax.servlet.http.HttpServletResponse;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.campus.common.annotation.Log;
 import com.campus.common.core.controller.BaseController;
 import com.campus.common.core.domain.AjaxResult;
+import com.campus.common.core.page.TableDataInfo;
 import com.campus.common.enums.BusinessType;
+import com.campus.common.utils.poi.ExcelUtil;
 import com.campus.manage.domain.CamHealth;
 import com.campus.manage.service.ICamHealthService;
-import com.campus.common.utils.poi.ExcelUtil;
-import com.campus.common.core.page.TableDataInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 健康打卡Controller
@@ -43,6 +37,17 @@ public class CamHealthController extends BaseController
     {
         startPage();
         List<CamHealth> list = camHealthService.selectCamHealthList(camHealth);
+        return getDataTable(list);
+    }
+
+    /**
+     *获取健康打卡详细信息通过时间倒序
+     */
+    @PreAuthorize("@ss.hasPermi('campus:health:query')")
+    @GetMapping("/listByName")
+    public TableDataInfo getinfoByStudentName(CamHealth camHealth){
+        startPage();
+        List<CamHealth> list = camHealthService.selectByStudentName(camHealth);
         return getDataTable(list);
     }
 
