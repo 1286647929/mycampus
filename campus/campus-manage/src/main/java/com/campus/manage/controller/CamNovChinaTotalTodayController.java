@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/campus/novchinatotaltoday")
-//@Anonymous  //开启匿名访问接口
+@Anonymous  //开启匿名访问接口
 public class CamNovChinaTotalTodayController extends BaseController {
 
     @Autowired

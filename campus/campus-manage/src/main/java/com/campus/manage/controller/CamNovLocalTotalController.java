@@ -23,7 +23,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/campus/novlocaltotal")
-//@Anonymous
+@Anonymous
 public class CamNovLocalTotalController {
 
     @GetMapping("/list")

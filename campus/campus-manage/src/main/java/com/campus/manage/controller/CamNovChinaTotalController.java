@@ -1,5 +1,6 @@
 package com.campus.manage.controller;
 
+import com.campus.common.annotation.Anonymous;
 import com.campus.common.core.controller.BaseController;
 import com.campus.common.core.domain.AjaxResult;
 import com.campus.manage.service.ICamNovChinaTotalService;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/campus/novchinatotal")
-//@Anonymous  //开启匿名访问接口
+@Anonymous  //开启匿名访问接口
 public class CamNovChinaTotalController extends BaseController {
 
     @Autowired

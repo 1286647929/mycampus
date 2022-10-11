@@ -1,5 +1,6 @@
 package com.campus.manage.controller;
 
+import com.campus.common.annotation.Anonymous;
 import com.campus.common.core.controller.BaseController;
 import com.campus.common.core.domain.AjaxResult;
 import com.campus.manage.domain.CamNovData;
@@ -19,7 +20,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/campus/novdata")
-//@Anonymous  //匿名访问不鉴权注解
+@Anonymous  //匿名访问不鉴权注解
 public class CamNovDataController extends BaseController {
     @Autowired
     private ICamNovDataService novDataService;
