@@ -1,18 +1,5 @@
 package com.campus.web.controller.system;
 
-import java.util.List;
-import javax.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.campus.common.annotation.Log;
 import com.campus.common.constant.UserConstants;
 import com.campus.common.core.controller.BaseController;
@@ -29,6 +16,13 @@ import com.campus.framework.web.service.TokenService;
 import com.campus.system.domain.SysUserRole;
 import com.campus.system.service.ISysRoleService;
 import com.campus.system.service.ISysUserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 角色信息
@@ -51,6 +45,11 @@ public class SysRoleController extends BaseController
     @Autowired
     private ISysUserService userService;
 
+    /**
+     * 查询角色列表
+     * @param role
+     * @return
+     */
     @PreAuthorize("@ss.hasPermi('system:role:list')")
     @GetMapping("/list")
     public TableDataInfo list(SysRole role)

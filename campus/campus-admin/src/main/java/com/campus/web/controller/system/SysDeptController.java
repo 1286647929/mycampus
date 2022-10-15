@@ -1,21 +1,5 @@
 package com.campus.web.controller.system;
 
-import java.util.Iterator;
-import java.util.List;
-
-import io.swagger.annotations.Api;
-import org.apache.commons.lang3.ArrayUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.campus.common.annotation.Log;
 import com.campus.common.constant.UserConstants;
 import com.campus.common.core.controller.BaseController;
@@ -24,9 +8,17 @@ import com.campus.common.core.domain.entity.SysDept;
 import com.campus.common.enums.BusinessType;
 import com.campus.common.utils.StringUtils;
 import com.campus.system.service.ISysDeptService;
+import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Iterator;
+import java.util.List;
 
 /**
- * 部门信息
+ * 学院信息
  * 
  * @author campus
  */
@@ -38,7 +30,7 @@ public class SysDeptController extends BaseController
     private ISysDeptService deptService;
 
     /**
-     * 获取部门列表
+     * 获取学院列表
      */
     @PreAuthorize("@ss.hasPermi('system:dept:list')")
     @GetMapping("/list")
@@ -49,7 +41,7 @@ public class SysDeptController extends BaseController
     }
 
     /**
-     * 查询部门列表（排除节点）
+     * 查询学院列表（排除节点）
      */
     @PreAuthorize("@ss.hasPermi('system:dept:list')")
     @GetMapping("/list/exclude/{deptId}")
@@ -70,7 +62,7 @@ public class SysDeptController extends BaseController
     }
 
     /**
-     * 根据部门编号获取详细信息
+     * 根据学院编号获取详细信息
      */
     @PreAuthorize("@ss.hasPermi('system:dept:query')")
     @GetMapping(value = "/{deptId}")
@@ -81,7 +73,7 @@ public class SysDeptController extends BaseController
     }
 
     /**
-     * 获取部门下拉树列表
+     * 获取学院下拉树列表
      */
     @GetMapping("/treeselect")
     public AjaxResult treeselect(SysDept dept)
@@ -91,7 +83,7 @@ public class SysDeptController extends BaseController
     }
 
     /**
-     * 加载对应角色部门列表树
+     * 加载对应角色学院列表树
      */
     @GetMapping(value = "/roleDeptTreeselect/{roleId}")
     public AjaxResult roleDeptTreeselect(@PathVariable("roleId") Long roleId)
@@ -104,26 +96,26 @@ public class SysDeptController extends BaseController
     }
 
     /**
-     * 新增部门
+     * 新增学院
      */
     @PreAuthorize("@ss.hasPermi('system:dept:add')")
-    @Log(title = "部门管理", businessType = BusinessType.INSERT)
+    @Log(title = "学院管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@Validated @RequestBody SysDept dept)
     {
         if (UserConstants.NOT_UNIQUE.equals(deptService.checkDeptNameUnique(dept)))
         {
-            return AjaxResult.error("新增部门'" + dept.getDeptName() + "'失败，部门名称已存在");
+            return AjaxResult.error("新增学院'" + dept.getDeptName() + "'失败，学院名称已存在");
         }
         dept.setCreateBy(getUsername());
         return toAjax(deptService.insertDept(dept));
     }
 
     /**
-     * 修改部门
+     * 修改学院
      */
     @PreAuthorize("@ss.hasPermi('system:dept:edit')")
-    @Log(title = "部门管理", businessType = BusinessType.UPDATE)
+    @Log(title = "学院管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody SysDept dept)
     {
@@ -131,35 +123,35 @@ public class SysDeptController extends BaseController
         deptService.checkDeptDataScope(deptId);
         if (UserConstants.NOT_UNIQUE.equals(deptService.checkDeptNameUnique(dept)))
         {
-            return AjaxResult.error("修改部门'" + dept.getDeptName() + "'失败，部门名称已存在");
+            return AjaxResult.error("修改学院'" + dept.getDeptName() + "'失败，学院名称已存在");
         }
         else if (dept.getParentId().equals(deptId))
         {
-            return AjaxResult.error("修改部门'" + dept.getDeptName() + "'失败，上级部门不能是自己");
+            return AjaxResult.error("修改学院'" + dept.getDeptName() + "'失败，上级学院不能是自己");
         }
         else if (StringUtils.equals(UserConstants.DEPT_DISABLE, dept.getStatus()) && deptService.selectNormalChildrenDeptById(deptId) > 0)
         {
-            return AjaxResult.error("该部门包含未停用的子部门！");
+            return AjaxResult.error("该学院包含未停用的子学院！");
         }
         dept.setUpdateBy(getUsername());
         return toAjax(deptService.updateDept(dept));
     }
 
     /**
-     * 删除部门
+     * 删除学院
      */
     @PreAuthorize("@ss.hasPermi('system:dept:remove')")
-    @Log(title = "部门管理", businessType = BusinessType.DELETE)
+    @Log(title = "学院管理", businessType = BusinessType.DELETE)
     @DeleteMapping("/{deptId}")
     public AjaxResult remove(@PathVariable Long deptId)
     {
         if (deptService.hasChildByDeptId(deptId))
         {
-            return AjaxResult.error("存在下级部门,不允许删除");
+            return AjaxResult.error("存在下级学院,不允许删除");
         }
         if (deptService.checkDeptExistUser(deptId))
         {
-            return AjaxResult.error("部门存在用户,不允许删除");
+            return AjaxResult.error("学院存在用户,不允许删除");
         }
         deptService.checkDeptDataScope(deptId);
         return toAjax(deptService.deleteDeptById(deptId));

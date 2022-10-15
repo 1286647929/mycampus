@@ -30,7 +30,7 @@ public class NewsDataScheduleTask {
      * 新闻数据爬取，存库
      * @throws Exception
      */
-    @Scheduled(cron = "0 50 9 * * *")
+    @Scheduled(cron = "0 23 11 * * *")
     public void getData() throws Exception {
 
         //前缀
